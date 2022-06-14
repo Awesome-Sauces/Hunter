@@ -1,0 +1,13 @@
+name: Hunter
+version: 1.0
+author: AwesomeSauce
+main: me.alpha.hunter.hunter
+api-version: 1.8
+
+depend: [Citizens]
+
+commands:
+  hunter:
+    description: Core command for Hunter plugin! Do /hunter help for examples
+    usage: /<command>
+    aliases: huntr

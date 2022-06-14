@@ -1,0 +1,41 @@
+plugins {
+    id "java"
+}
+
+group "me.alpha.hunter"
+version "1.0"
+
+repositories {
+    mavenCentral()
+
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/'}
+    maven { url "https://repo.citizensnpcs.co" }
+    maven { url "https://repo.codemc.io/repository/maven-public/"}
+    maven {url 'https://hub.spigotmc.org/nexus/content/groups/public/'}
+    maven {url "https://repo.essentialsx.net/snapshots/"}
+
+    mavenLocal()
+}
+
+
+
+dependencies {
+
+    compileOnly "org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT"
+    compileOnly "net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT"
+    compileOnly "com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9"
+    compileOnly "org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT"
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+processResources{
+    doFirst {
+        file("$buildDir/resources/main").listFiles().each {
+            it.delete()
+        }
+    }
+}

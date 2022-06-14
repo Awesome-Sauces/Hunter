@@ -13,31 +13,25 @@ public class BoxArea {
 
     public static HashMap<String, Integer> BoxArea = new HashMap<>();
 
-
-
-    public static void setBoxArea(String player, int amount){
-        BoxArea.put(player, amount);
+    public static void setDefaultBoxAreas(){
+        if(BoxArea.isEmpty()){
+            BoxArea.put("map", 82); // Map is the one used by default, if you use another map, change this value.
+            BoxArea.put("og", 82);
+            BoxArea.put("king", 71);
+            BoxArea.put("beach", 82);
+        }
     }
 
-    public static void addBoxArea(String player, int amount){
-        BoxArea.put(player, BoxArea.get(player)+amount);
+    public static void setBoxArea(String world, int Y){
+        BoxArea.put(world, Y);
     }
 
-    public static int getBoxArea(String player){
-        return BoxArea.get(player);
+    public static int getBoxArea(){
+        return BoxArea.get("map");
     }
 
     public static HashMap<String, Integer> getBoxAreaMap(){
         return BoxArea;
-    }
-
-    public static boolean hasBoxArea(String player){
-        if(BoxArea.containsKey(player)){
-            return true;
-        }else{
-            BoxArea.put(player, 0);
-        }
-        return true;
     }
 
     public static hunter getPlugin(){

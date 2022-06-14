@@ -44,6 +44,7 @@ public class command implements CommandExecutor {
                 player.sendMessage(ChatColor.GREEN + "Hunter 2.0.0");
                 
                 player.sendMessage(ChatColor.RED +   "/hunter create");
+                player.sendMessage(ChatColor.RED +   "/hunter setMap");
                 player.sendMessage(ChatColor.RED +   "/hunter atest");
                 player.sendMessage(ChatColor.RED + "/hunter info");
 
@@ -65,6 +66,13 @@ public class command implements CommandExecutor {
                     return true;
                 }else{
                     hunterUtils.createHunterBot(args[1]);
+                }
+            }else if(args[0].equalsIgnoreCase("setMap")){
+                if(args.length < 2){
+                    player.sendMessage(ChatColor.RED + "Example: /hunter setMap <Y-coordinate>");
+                    return true;
+                }else{
+                    BoxArea.setBoxArea("map", Integer.parseInt(args[1]));
                 }
             }else if(args[0].equalsIgnoreCase("atest")){
 

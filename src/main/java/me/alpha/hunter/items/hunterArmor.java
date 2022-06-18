@@ -11,7 +11,15 @@ public class hunterArmor {
     public static ItemStack ChainChestplate;
     public static ItemStack ChainLeggings;
     public static ItemStack ChainBoots;
+    public static ItemStack DiamondHelmet;
+    public static ItemStack DiamondChestplate;
+    public static ItemStack DiamondLeggings;
+    public static ItemStack DiamondBoots;
+    public static ItemStack IronHelmet;
+    public static ItemStack IronChestplate;
+    public static ItemStack IronBoots;
     public static ItemStack IronSword;
+    public static ItemStack DiamondSword;
 
     public static void init() {
         createChainBoots();
@@ -19,6 +27,16 @@ public class hunterArmor {
         createChainChestplate();
         createChainHelmet();
         createIronSword();
+
+        createDiamondSword();
+        createIronBoots();
+        createDiamondLeggings();
+        createIronChestplate();
+        createIronHelmet();
+
+        createDiamondChestplate();
+        createDiamondHelmet();
+        createDiamondLeggings();
     }
 
     private static void createIronSword() {
@@ -61,5 +79,69 @@ public class hunterArmor {
         ChainBoots = item;
     }
 
+
+    private static void createDiamondSword() {
+        ItemStack item = new ItemStack(Material.DIAMOND_SWORD, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        item.setItemMeta(meta);
+        DiamondSword = item;
+    }
+
+    private static void createIronHelmet() {
+        ItemStack item = new ItemStack(Material.IRON_HELMET, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        item.setItemMeta(meta);
+        IronHelmet = item;
+    }
+
+    private static void createDiamondHelmet() {
+        ItemStack item = new ItemStack(Material.DIAMOND_HELMET, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        item.setItemMeta(meta);
+        DiamondHelmet = item;
+    }
+
+    private static void createDiamondChestplate() {
+        ItemStack item = new ItemStack(Material.DIAMOND_CHESTPLATE, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        item.setItemMeta(meta);
+        DiamondChestplate = item;
+    }
+
+    private static void createIronChestplate() {
+        ItemStack item = new ItemStack(Material.IRON_CHESTPLATE, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        item.setItemMeta(meta);
+        IronChestplate = item;
+    }
+
+    private static void createDiamondLeggings() {
+        ItemStack item = new ItemStack(Material.IRON_LEGGINGS, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        item.setItemMeta(meta);
+        DiamondLeggings = item;
+    }
+
+    private static void createIronBoots() {
+        ItemStack item = new ItemStack(Material.IRON_BOOTS, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        item.setItemMeta(meta);
+        IronBoots = item;
+    }
+
+    private static void createDiamondBoots() {
+        ItemStack item = new ItemStack(Material.DIAMOND_BOOTS, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.spigot().setUnbreakable(true);
+        item.setItemMeta(meta);
+        DiamondBoots = item;
+    }
 
 }

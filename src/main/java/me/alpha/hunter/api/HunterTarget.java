@@ -22,8 +22,10 @@ import static me.alpha.hunter.main.hunterUtils.gearNearby;
 public class HunterTarget {
 
     NPC npc;
+    double damage;
 
-    public HunterTarget(NPC npc){
+    public HunterTarget(NPC npc, double damage){
+        this.damage = damage;
         this.npc = npc;
         this.npc.getNavigator().getDefaultParameters()
                 .attackDelayTicks(5);
@@ -40,7 +42,7 @@ public class HunterTarget {
                     //if(npc.getNavigator().getTargetType() != null && npc.getNavigator().getTargetType().equals(TargetType.ENTITY) && npc.getEntity().getLocation().distance(npc.getNavigator().getTargetAsLocation()) <= 3.3)
 
 
-                    if(!gearNearby(npc.getEntity(), 5).isEmpty()){
+                    if(!gearNearby(npc.getEntity(), 10).isEmpty()){
 
                         for (Player players : gearNearby(npc.getEntity(), 5)){
                             if(!CitizensAPI.getNPCRegistry().isNPC(players)){
@@ -49,17 +51,17 @@ public class HunterTarget {
                             }
                         }
 
-                        Player player = hunterUtils.getNearbyPlayers(npc.getEntity(), 4);
+                        Player player = hunterUtils.getNearbyPlayers(npc.getEntity(), 10);
 
                         if(player != null){
 
                             npc.getNavigator().setTarget(player, false);
 
 
-                            if(CitizensAPI.getNPCRegistry().isNPC(player) && player.isOnGround() || CitizensAPI.getNPCRegistry().isNPC(player) && player.getLocation().getY() - npc.getEntity().getLocation().getY() <= 1)player.damage(5, npc.getEntity());
-                            else if(!CitizensAPI.getNPCRegistry().isNPC(player))player.damage(5, npc.getEntity());
+                            if(CitizensAPI.getNPCRegistry().isNPC(player) && player.isOnGround() && player.getLocation().distance(npc.getEntity().getLocation()) <= 4 || CitizensAPI.getNPCRegistry().isNPC(player) && player.getLocation().getY() - npc.getEntity().getLocation().getY() <= 1 && player.getLocation().distance(npc.getEntity().getLocation()) <= 4)player.damage(damage, npc.getEntity());
+                            else if(!CitizensAPI.getNPCRegistry().isNPC(player) && player.getLocation().distance(npc.getEntity().getLocation()) <= 4)player.damage(5, npc.getEntity());
                         }else{
-                            npc.getNavigator().setTarget(gearNearby(npc.getEntity(), 5).get(0), false);
+                            npc.getNavigator().setTarget(gearNearby(npc.getEntity(), 10).get(0), false);
                         }
 
 
@@ -67,7 +69,7 @@ public class HunterTarget {
                     }else{
                         Location location = findLocation.getLocation();
 
-                        if(npc.getNavigator().isNavigating() && npc.getNavigator().getTargetType().equals(TargetType.ENTITY) && npc.getEntity().getLocation().distance(npc.getNavigator().getEntityTarget().getTarget().getLocation()) >= 4.5){
+                        if(npc.getNavigator().isNavigating() && npc.getNavigator().getTargetType() != null && npc.getNavigator().getTargetType().equals(TargetType.ENTITY)){
                             npc.getNavigator().cancelNavigation();
                             npc.getNavigator().setTarget(location);
                         }

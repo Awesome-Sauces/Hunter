@@ -37,7 +37,7 @@ public class advancedInventory {
                 null_meta.setDisplayName(name);
                 null_meta.setLore(table_lore);
             }
-            //null_meta.spigot().setUnbreakable(true);
+            null_meta.spigot().setUnbreakable(true);
             item.setItemMeta(null_meta);
             return item;
         }
@@ -54,6 +54,17 @@ public class advancedInventory {
 
     public static ItemStack DyeMaker(short dyeColor, String DisplayName, String lore){
         ItemStack dye = new ItemStack(351, 1, dyeColor);
+        ItemMeta meta = dye.getItemMeta();
+        meta.setDisplayName(DisplayName);
+        String[] lines = lore.split("\\n");
+        ArrayList<String> dye_lore = new ArrayList<>(Arrays.asList(lines));
+        meta.setLore(dye_lore);
+        dye.setItemMeta(meta);
+        return dye;
+    }
+
+    public static ItemStack ClayMaker(short clayColor, String DisplayName, String lore){
+        ItemStack dye = new ItemStack(159, 1, clayColor);
         ItemMeta meta = dye.getItemMeta();
         meta.setDisplayName(DisplayName);
         String[] lines = lore.split("\\n");

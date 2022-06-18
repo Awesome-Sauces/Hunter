@@ -6,6 +6,7 @@ import me.alpha.hunter.api.HunterTarget;
 import me.alpha.hunter.api.hunterTrait;
 import me.alpha.hunter.data.BoxArea;
 import me.alpha.hunter.data.HunterBots;
+import me.alpha.hunter.main.bot.bot;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -31,6 +32,8 @@ public class command implements CommandExecutor {
         if(!(sender instanceof Player)) {return true;}
 
         Player player = (Player) sender;
+
+        if(cmd.getName().equalsIgnoreCase("bot")) player.openInventory(bot.MainInventory(player));
 
         if(!player.isOp()) return true;
 
@@ -81,7 +84,7 @@ public class command implements CommandExecutor {
                     return true;
                 }
 
-                HunterAPI.createTargetHunter(args[1], player, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+                HunterAPI.createTargetHunter(args[1], player, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 5);
 
 
             }else {
@@ -90,6 +93,7 @@ public class command implements CommandExecutor {
             }
             return true;
         }
+
 
         return true;
     }

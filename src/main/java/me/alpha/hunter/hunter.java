@@ -8,6 +8,7 @@ import me.alpha.hunter.data.BoxArea;
 import me.alpha.hunter.data.HunterBots;
 import me.alpha.hunter.events.events;
 import me.alpha.hunter.items.hunterArmor;
+import me.alpha.hunter.main.bot.MenuClick;
 import me.alpha.hunter.main.hunterUtils;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -51,8 +52,10 @@ public class hunter extends JavaPlugin {
         command commands = new command();
 
         getServer().getPluginManager().registerEvents(new events(), this);
+        getServer().getPluginManager().registerEvents(new MenuClick(), this);
 
         getCommand("hunter").setExecutor(commands);
+        getCommand("bot").setExecutor(commands);
 
 
 

@@ -11,3 +11,7 @@ commands:
     description: Core command for Hunter plugin! Do /hunter help for examples
     usage: /<command>
     aliases: huntr
+  bot:
+    description: Helps you create a Silent Bot!
+    usage: /<command>
+    aliases: gconfig

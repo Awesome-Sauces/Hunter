@@ -7,6 +7,7 @@ import me.alpha.hunter.main.math.findLocation;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.ai.TargetType;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.trait.LookClose;
 import org.bukkit.Bukkit;
@@ -19,6 +20,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+
+import java.util.UUID;
 
 public class HunterAPI {
     public static NPC createTargetHunter(String hunter_name, Player target, int speed, int jumpTime, int time, double damage){
@@ -106,6 +109,8 @@ public class HunterAPI {
 
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, hunter_name);
 
+        String uuid = String.valueOf(target.getUniqueId());
+
         npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, boots);
         npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, leggings);
         npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, chestplate);
@@ -140,6 +145,7 @@ public class HunterAPI {
             public void run() {
                 npc.getNavigator().setTarget(target.getLocation());
                 new HunterTarget(npc, damage).run();
+
             }
         }, 20L);
 
@@ -172,6 +178,7 @@ public class HunterAPI {
                 @Override
                 public void run() {
                     if(npc.isSpawned()){
+                        BotConfigHelper.removeSpawnedBot(uuid);
                         runnable.cancel();
                         npc.despawn();
                         npc.destroy();

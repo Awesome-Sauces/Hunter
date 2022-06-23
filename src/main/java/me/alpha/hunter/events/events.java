@@ -4,7 +4,10 @@ import me.alpha.hunter.api.hunterTrait;
 import me.alpha.hunter.main.math.findLocation;
 import net.citizensnpcs.api.ai.TargetType;
 import net.citizensnpcs.api.ai.event.NavigationCompleteEvent;
+import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.event.NPCDamageByEntityEvent;
+import net.citizensnpcs.api.event.NPCDeathEvent;
+import net.citizensnpcs.api.event.SpawnReason;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,6 +25,18 @@ import static me.alpha.hunter.main.hunterUtils.gearNearby;
 
 
 public class events implements Listener {
+
+    @EventHandler
+    public void handleDeath(NPCDeathEvent event){
+        NPC npc = event.getNPC();
+
+        npc.getNavigator().cancelNavigation();
+        npc.destroy();
+        npc.despawn(DespawnReason.DEATH);
+        npc.spawn(new Location(Bukkit.getWorld("world"), 0, 90, 0), SpawnReason.RESPAWN);
+        npc.teleport(new Location(Bukkit.getWorld("world"), 0, 90, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
+    }
+
 /*
     @EventHandler
     public void handleNewLocation(NavigationCompleteEvent event) {
@@ -40,13 +55,13 @@ public class events implements Listener {
 
  */
 
-    /*
+/*
     @EventHandler
     public void handleDeath(NPCDamageByEntityEvent event){
         NPC npc = event.getNPC();
         Player player = (Player) event.getNPC().getEntity();
         if(npc.getEntity() != null){
-            if(player.getHealth() - event.getDamage() <= 3){
+            if(player.getHealth() - event.getDamage() <= 4){
                 event.setCancelled(true);
                 player.setHealth(player.getMaxHealth());
                 npc.teleport(new Location(Bukkit.getWorld("world"), 0, 100, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
@@ -56,7 +71,5 @@ public class events implements Listener {
         }
     }
 
-     */
-
-
+ */
 }

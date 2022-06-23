@@ -19,12 +19,10 @@ public class HunterBots {
 
     public static void removeHunterBots(){
         for(NPC npc : hunterBots){
-            if(npc.isSpawned()){
-                npc.despawn();
-                npc.destroy();
-                CitizensAPI.getNPCRegistry().deregister(npc);
-                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&c&lA player has been removed from your game for hacking or abuse &bThanks for reporting it!"));
-            }
+            if(npc.isSpawned()) npc.despawn();
+            npc.destroy();
+            CitizensAPI.getNPCRegistry().deregister(npc);
+            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&c&lA player has been removed from your game for hacking or abuse &bThanks for reporting it!"));
         }
     }
 

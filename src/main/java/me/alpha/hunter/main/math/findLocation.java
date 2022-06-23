@@ -14,7 +14,8 @@ public class findLocation {
     public static Location getLocation(){
 
         List<Location> locationList = new ArrayList<Location>();
-        //
+
+
         locationList.add(new Location(Bukkit.getWorld("world"), -3.5, 82, -4.5));
         //
         locationList.add(new Location(Bukkit.getWorld("world"), 2.5, 82, -3.5));

@@ -1,11 +1,15 @@
 package me.alpha.hunter.main.bot;
 
+import me.alpha.hunter.api.BotConfig;
+import me.alpha.hunter.api.BotConfigHelper;
 import me.alpha.hunter.apis.advancedInventory;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import static me.alpha.hunter.api.BotConfigHelper.botConfigExists;
 
 public class bot {
     public static ItemStack speed = advancedInventory.ItemMaker(Material.GOLD_BOOTS, ChatColor.RED + "Speed Pattern",
@@ -22,10 +26,6 @@ public class bot {
             ChatColor.translateAlternateColorCodes('&',
                     "&7Click to open the\n&7configuration menu!"),
             1, true);
-
-    public static ItemStack confirm = advancedInventory.DyeMaker((short) 10, ChatColor.GREEN + "Confirm",
-            ChatColor.translateAlternateColorCodes('&',
-            "&7Creates your &c&lSilent Bot&7!"));
 
     public static ItemStack low = advancedInventory.DyeMaker((short) 8, ChatColor.GRAY + "Low",
             ChatColor.translateAlternateColorCodes('&',
@@ -44,6 +44,7 @@ public class bot {
         Inventory gui = advancedInventory.inv(player, 27, ChatColor.GRAY + "Bot Menu");
         ItemStack base_glass = advancedInventory.cGlass();
 
+        BotConfig botConfig = botConfigExists(player);
 
         for (int i = 0; i < gui.getSize(); i++) if (gui.getItem(i) == null) gui.setItem(i, base_glass);
 
@@ -53,7 +54,9 @@ public class bot {
 
         gui.setItem(14, armor);
 
-        gui.setItem(16, confirm);
+        gui.setItem(16, advancedInventory.DyeMaker((short) 10, ChatColor.GREEN + "Confirm",
+                ChatColor.translateAlternateColorCodes('&',
+                        "&7Creates your &c&lSilent Bot&7!\n\n" + "&7Bots: &a" + BotConfigHelper.getSpawnedBot(String.valueOf(player.getUniqueId())) + "&7/" + botConfig.getMaxBots())));
 
         return gui;
     }

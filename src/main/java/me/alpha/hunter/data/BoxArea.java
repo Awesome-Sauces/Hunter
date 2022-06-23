@@ -17,7 +17,7 @@ public class BoxArea {
         if(BoxArea.isEmpty()){
             BoxArea.put("map", 82); // Map is the one used by default, if you use another map, change this value.
             BoxArea.put("og", 82);
-            BoxArea.put("king", 71);
+            BoxArea.put("king", 82);
             BoxArea.put("beach", 82);
         }
     }

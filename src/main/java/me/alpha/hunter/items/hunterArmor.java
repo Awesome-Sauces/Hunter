@@ -37,6 +37,7 @@ public class hunterArmor {
         createDiamondChestplate();
         createDiamondHelmet();
         createDiamondLeggings();
+        createDiamondBoots();
     }
 
     private static void createIronSword() {

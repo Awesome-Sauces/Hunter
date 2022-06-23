@@ -1,6 +1,7 @@
 package me.alpha.hunter.api;
 
 import me.alpha.hunter.items.hunterArmor;
+import me.alpha.hunter.main.bot.util;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,6 +12,7 @@ public class BotConfig {
     int jumpTick;
     int time;
     double damage;
+    int maxBots;
 
     Player player;
     ItemStack sword;
@@ -31,6 +33,9 @@ public class BotConfig {
         this.speed = 2;
         this.jumpTick = 5;
         this.time = 600;
+
+        this.spawnedBots = 0;
+        this.maxBots = util.getMaxBotCount(player);
     }
 
     public int getSpeed() {
@@ -113,5 +118,12 @@ public class BotConfig {
         this.sword = sword;
     }
 
+    public int getMaxBots() {
+        return maxBots;
+    }
+
+    public void setMaxBots(int maxBots) {
+        this.maxBots = maxBots;
+    }
 
 }

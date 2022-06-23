@@ -1,6 +1,7 @@
 package me.alpha.hunter.main.bot;
 
 import me.alpha.hunter.api.BotConfig;
+import me.alpha.hunter.api.BotConfigHelper;
 import me.alpha.hunter.api.HunterAPI;
 import me.alpha.hunter.api.hunterTrait;
 import me.alpha.hunter.items.hunterArmor;
@@ -37,8 +38,24 @@ public class MenuClick implements Listener {
 
         BotConfig botConfig = botConfigExists(player);
 
-        if(event.getCurrentItem().equals(bot.confirm)){
-            HunterAPI.createTargetHunter(player.getDisplayName(), player, botConfig.getSpeed(), botConfig.getJumpTick(), botConfig.getTime(), botConfig.getDamage(), botConfig.getSword(), botConfig.getHelmet(), botConfig.getChestplate(), botConfig.getLeggings(), botConfig.getBoots());
+        if(event.getCurrentItem().getTypeId() == 351){
+
+            botConfig.setMaxBots(util.getMaxBotCount(player));
+
+            BotConfigHelper.addSpawnedBot(String.valueOf(player.getUniqueId()));
+
+            if(!player.isOp() && BotConfigHelper.getSpawnedBot(String.valueOf(player.getUniqueId())) > botConfig.getMaxBots()){
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&cYou have reached the max amount of bots that you can spawn!" +
+                                "&7To spawn more bots please purchase a rank upgrade at: &bhttps://betterpit.tebex.io"));
+
+                return;
+            }
+
+            player.openInventory(bot.MainInventory(player));
+
+            HunterAPI.createTargetHunter(ChatColor.translateAlternateColorCodes('&',
+                    ChatColor.stripColor(player.getDisplayName())), player, botConfig.getSpeed(), botConfig.getJumpTick(), botConfig.getTime(), botConfig.getDamage(), botConfig.getSword(), botConfig.getHelmet(), botConfig.getChestplate(), botConfig.getLeggings(), botConfig.getBoots());
         }else if(event.getCurrentItem().equals(bot.attackPattern)){
             player.openInventory(bot.ConfigMenu(player, ChatColor.GRAY + "Attack Pattern"));
         }else if(event.getCurrentItem().equals(bot.armor)){

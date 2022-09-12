@@ -26,6 +26,7 @@ import static me.alpha.hunter.main.hunterUtils.gearNearby;
 
 public class events implements Listener {
 
+    /*
     @EventHandler
     public void handleDeath(NPCDeathEvent event){
         NPC npc = event.getNPC();
@@ -36,6 +37,8 @@ public class events implements Listener {
         npc.spawn(new Location(Bukkit.getWorld("world"), 0, 90, 0), SpawnReason.RESPAWN);
         npc.teleport(new Location(Bukkit.getWorld("world"), 0, 90, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
+
+     */
 
 /*
     @EventHandler

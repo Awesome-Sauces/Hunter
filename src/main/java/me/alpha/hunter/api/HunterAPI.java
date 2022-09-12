@@ -9,7 +9,6 @@ import net.citizensnpcs.api.ai.TargetType;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.trait.Equipment;
-import net.citizensnpcs.trait.LookClose;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -29,11 +28,12 @@ public class HunterAPI {
         NPC npc = hunterUtils.createHunterBot(hunter_name, true);
         HunterBots.addHunterBot(npc);
 
-        npc.spawn(target.getLocation());
+        if (!npc.isSpawned()){
+            npc.spawn(target.getLocation());
+        }
         npc.teleport(target.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
 
-        npc.getOrAddTrait(LookClose.class);
-        npc.getOrAddTrait(LookClose.class).toggle();
+        npc.faceLocation(target.getLocation());
 
         npc.getNavigator().getDefaultParameters()
                 .range(30)
@@ -59,6 +59,7 @@ public class HunterAPI {
             public void run() {
 
                 if(npc.isSpawned()){
+                    npc.faceLocation(target.getLocation());
 
                     if(npc.getEntity().getLocation().getY() - 82 >= 10){
                         npc.teleport(new Location(Bukkit.getWorld("world"), 0, 82, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
@@ -125,11 +126,13 @@ public class HunterAPI {
 
         HunterBots.addHunterBot(npc);
 
-        npc.spawn(target.getLocation());
+        if (!npc.isSpawned()){
+            npc.spawn(target.getLocation());
+        }
+
         npc.teleport(target.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
 
-        npc.getOrAddTrait(LookClose.class);
-        npc.getOrAddTrait(LookClose.class).toggle();
+        npc.faceLocation(target.getLocation());
 
         npc.getNavigator().getDefaultParameters()
                 .range(30)
@@ -155,6 +158,8 @@ public class HunterAPI {
             @Override
             public void run() {
                 if(npc.isSpawned()){
+
+                    npc.faceLocation(target.getLocation());
 
                     if(npc.getEntity().getLocation().getY() - 82 >= 10){
                         npc.teleport(new Location(Bukkit.getWorld("world"), 0, 82, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);

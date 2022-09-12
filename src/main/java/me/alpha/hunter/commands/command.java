@@ -64,12 +64,17 @@ public class command implements CommandExecutor {
 
                 player.sendMessage(ChatColor.RED +   "More comming soon!");
             }else if(args[0].equalsIgnoreCase("create")){
+
+                return true;
+
+                /*
                 if(args.length < 2){
                     player.sendMessage(ChatColor.RED + "Try doing /hunter help!");
                     return true;
                 }else{
                     hunterUtils.createHunterBot(args[1]);
                 }
+                */
             }else if(args[0].equalsIgnoreCase("setMap")){
                 if(args.length < 2){
                     player.sendMessage(ChatColor.RED + "Example: /hunter setMap <Y-coordinate>");

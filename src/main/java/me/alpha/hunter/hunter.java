@@ -80,7 +80,10 @@ public class hunter extends JavaPlugin {
                             getLogger().log(Level.SEVERE, "Citizens 2.0 not found or not enabled");
                             getServer().getPluginManager().disablePlugin(getPlugin());
                         }else{
-                            if(CitizensAPI.getTraitFactory().getRegisteredTraits().contains(net.citizensnpcs.api.trait.TraitInfo.create(hunterTrait.class).withName("hunterTrait"))) this.cancel();
+                            if(CitizensAPI.getTraitFactory().getRegisteredTraits().contains(net.citizensnpcs.api.trait.TraitInfo.create(hunterTrait.class).withName("hunterTrait"))) {
+                                this.cancel();
+                                return;
+                            }
                             net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(hunterTrait.class).withName("hunterTrait"));
                             this.cancel();
                         }

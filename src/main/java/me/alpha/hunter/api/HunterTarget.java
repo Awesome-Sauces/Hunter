@@ -56,6 +56,7 @@ public class HunterTarget {
                         if(player != null){
 
                             npc.getNavigator().setTarget(player, false);
+                            npc.faceLocation(npc.getNavigator().getTargetAsLocation());
 
                             if(npc.getEntity()!=null){
                                 if(CitizensAPI.getNPCRegistry().isNPC(player) && player.isOnGround() && player.getLocation().distance(npc.getEntity().getLocation()) <= 4 || CitizensAPI.getNPCRegistry().isNPC(player) && player.getLocation().getY() - npc.getEntity().getLocation().getY() <= 1 && player.getLocation().distance(npc.getEntity().getLocation()) <= 4)player.damage(damage, npc.getEntity());

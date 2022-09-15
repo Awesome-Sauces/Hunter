@@ -2,6 +2,7 @@ package me.alpha.hunter.api;
 
 import me.alpha.hunter.data.BoxArea;
 import me.alpha.hunter.data.HunterBots;
+import me.alpha.hunter.items.hunterArmor;
 import me.alpha.hunter.main.hunterUtils;
 import me.alpha.hunter.main.math.findLocation;
 import net.citizensnpcs.api.CitizensAPI;
@@ -23,6 +24,12 @@ import org.bukkit.util.Vector;
 import java.util.UUID;
 
 public class HunterAPI {
+    public static NPC createHunterNon(Location loc){
+        return HunterAPI.createTargetHunter("Bob", loc, 2, 5,
+                0, 8, hunterArmor.IronSword, null,
+                hunterArmor.ChainChestplate, hunterArmor.ChainLeggings, hunterArmor.ChainBoots);
+    }
+
     public static NPC createTargetHunter(String hunter_name, Player target, int speed, int jumpTime, int time, double damage){
 
         NPC npc = hunterUtils.createHunterBot(hunter_name, true);
@@ -36,7 +43,6 @@ public class HunterAPI {
         npc.faceLocation(target.getLocation());
 
         npc.getNavigator().getDefaultParameters()
-                .range(30)
                 .attackRange(30)
                 .speedModifier(Math.max(2, speed));
 
@@ -61,6 +67,8 @@ public class HunterAPI {
                 if(npc.isSpawned()){
                     npc.faceLocation(target.getLocation());
 
+/*
+
                     if(npc.getEntity().getLocation().getY() - 82 >= 10){
                         npc.teleport(new Location(Bukkit.getWorld("world"), 0, 82, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
 
@@ -71,6 +79,8 @@ public class HunterAPI {
                             npc.getNavigator().setTarget(location);
                         }
                     }
+
+                     */
 
                     if(npc.getEntity().isOnGround()){
                         ((Player) npc.getEntity()).setVelocity(new Vector(0, .38, 0));
@@ -106,11 +116,11 @@ public class HunterAPI {
         return npc;
     }
 
-    public static NPC createTargetHunter(String hunter_name, Player target, int speed, int jumpTime, int time, double damage, ItemStack sword, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots){
+    public static NPC createTargetHunter(String hunter_name, Location target, int speed, int jumpTime, int time, double damage, ItemStack sword, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots){
 
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, hunter_name);
 
-        String uuid = String.valueOf(target.getUniqueId());
+        //String uuid = String.valueOf(target.getUniqueId());
 
         npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, boots);
         npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, leggings);
@@ -127,15 +137,13 @@ public class HunterAPI {
         HunterBots.addHunterBot(npc);
 
         if (!npc.isSpawned()){
-            npc.spawn(target.getLocation());
+            npc.spawn(target);
         }
 
-        npc.teleport(target.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+        npc.teleport(target, PlayerTeleportEvent.TeleportCause.PLUGIN);
 
-        npc.faceLocation(target.getLocation());
 
         npc.getNavigator().getDefaultParameters()
-                .range(30)
                 .attackRange(30)
                 .speedModifier(Math.max(2, speed));
 
@@ -146,7 +154,6 @@ public class HunterAPI {
         Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
             @Override
             public void run() {
-                npc.getNavigator().setTarget(target.getLocation());
                 new HunterTarget(npc, damage).run();
 
             }
@@ -159,7 +166,14 @@ public class HunterAPI {
             public void run() {
                 if(npc.isSpawned()){
 
-                    npc.faceLocation(target.getLocation());
+                    npc.faceLocation(npc.getNavigator().getTargetAsLocation());
+
+                    if (npc.getEntity() != null && npc.getEntity().getLocation().getY() >= 150){
+                        npc.teleport(findLocation.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+                        npc.getNavigator().setTarget(findLocation.getLocation());
+                    }
+
+                    /*
 
                     if(npc.getEntity().getLocation().getY() - 82 >= 10){
                         npc.teleport(new Location(Bukkit.getWorld("world"), 0, 82, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
@@ -172,6 +186,8 @@ public class HunterAPI {
                         }
                     }
 
+                     */
+
                     if(npc.getEntity().isOnGround()) ((Player) npc.getEntity()).setVelocity(new Vector(0, .38, 0));
                 }
             }
@@ -183,7 +199,6 @@ public class HunterAPI {
                 @Override
                 public void run() {
                     if(npc.isSpawned()){
-                        BotConfigHelper.removeSpawnedBot(uuid);
                         runnable.cancel();
                         npc.despawn();
                         npc.destroy();

@@ -40,10 +40,15 @@ public class MenuClick implements Listener {
 
         if(event.getCurrentItem().getTypeId() == 351){
 
+            if (!player.isOp()){
+                return;
+            }
+
             botConfig.setMaxBots(util.getMaxBotCount(player));
 
-            BotConfigHelper.addSpawnedBot(String.valueOf(player.getUniqueId()));
+            //BotConfigHelper.addSpawnedBot(String.valueOf(player.getUniqueId()));
 
+            /*
             if(!player.isOp() && BotConfigHelper.getSpawnedBot(String.valueOf(player.getUniqueId())) > botConfig.getMaxBots()){
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         "&cYou have reached the max amount of bots that you can spawn!" +
@@ -52,10 +57,12 @@ public class MenuClick implements Listener {
                 return;
             }
 
+             */
+
             player.openInventory(bot.MainInventory(player));
 
             HunterAPI.createTargetHunter(ChatColor.translateAlternateColorCodes('&',
-                    ChatColor.stripColor(player.getDisplayName())), player, botConfig.getSpeed(), botConfig.getJumpTick(), botConfig.getTime(), botConfig.getDamage(), botConfig.getSword(), botConfig.getHelmet(), botConfig.getChestplate(), botConfig.getLeggings(), botConfig.getBoots());
+                    ChatColor.stripColor(player.getDisplayName())), player.getLocation(), botConfig.getSpeed(), botConfig.getJumpTick(), botConfig.getTime(), botConfig.getDamage(), botConfig.getSword(), botConfig.getHelmet(), botConfig.getChestplate(), botConfig.getLeggings(), botConfig.getBoots());
         }else if(event.getCurrentItem().equals(bot.attackPattern)){
             player.openInventory(bot.ConfigMenu(player, ChatColor.GRAY + "Attack Pattern"));
         }else if(event.getCurrentItem().equals(bot.armor)){

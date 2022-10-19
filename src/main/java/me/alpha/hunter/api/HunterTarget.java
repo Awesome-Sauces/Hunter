@@ -55,31 +55,41 @@ public class HunterTarget {
 
                         if(player != null){
 
-                            npc.getNavigator().setTarget(player, false);
+                            if(npc.getEntity().isOnGround()){
+                                npc.getNavigator().cancelNavigation();
+                                npc.getNavigator().setTarget(findLocation.getLocation());
+                            }
+                            //npc.getNavigator().setTarget(player, false);
                             npc.faceLocation(npc.getNavigator().getTargetAsLocation());
 
                             if(npc.getEntity()!=null){
-                                if(CitizensAPI.getNPCRegistry().isNPC(player) && player.isOnGround() && player.getLocation().distance(npc.getEntity().getLocation()) <= 4 || CitizensAPI.getNPCRegistry().isNPC(player) && player.getLocation().getY() - npc.getEntity().getLocation().getY() <= 1 && player.getLocation().distance(npc.getEntity().getLocation()) <= 4)player.damage(damage, npc.getEntity());
-                                else if(!CitizensAPI.getNPCRegistry().isNPC(player) && player.getLocation().distance(npc.getEntity().getLocation()) <= 4)player.damage(5, npc.getEntity());
+                                if(CitizensAPI.getNPCRegistry().isNPC(player) && player.getLocation().getY()==124 && player.getLocation().distance(npc.getEntity().getLocation()) <= 4 || CitizensAPI.getNPCRegistry().isNPC(player) && player.getLocation().getY() - npc.getEntity().getLocation().getY() <= 1 && player.getLocation().distance(npc.getEntity().getLocation()) <= 4)player.damage(damage, npc.getEntity());
+                                else if(!CitizensAPI.getNPCRegistry().isNPC(player) && player.getLocation().distance(npc.getEntity().getLocation()) <= 4 )player.damage(5, npc.getEntity());
                             }
 
                         }else{
-                            npc.getNavigator().setTarget(gearNearby(npc.getEntity(), 10).get(0), false);
+                            //Player nearby = gearNearby(npc.getEntity(), 10).get(0);
+
+                            if(npc.getEntity().isOnGround()){
+                                npc.getNavigator().cancelNavigation();
+                                npc.getNavigator().setTarget(findLocation.getLocation());
+                            }
+
                         }
 
 
 
-                    }else{
-                        Location location = findLocation.getLocation();
+                    }/*else{
 
                         if(npc.getNavigator().isNavigating() && npc.getNavigator().getTargetType() != null && npc.getNavigator().getTargetType().equals(TargetType.ENTITY)){
                             npc.getNavigator().cancelNavigation();
-                            npc.getNavigator().setTarget(location);
+                            npc.getNavigator().setTarget(new Location(Bukkit.getWorld("world"), -2, 124, 12));
                         }
 
 
 
                     }
+                    */
 
                 }
 

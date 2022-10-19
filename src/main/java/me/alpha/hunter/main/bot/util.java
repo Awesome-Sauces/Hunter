@@ -4,18 +4,20 @@ import org.bukkit.entity.Player;
 
 public class util {
     public static int getMaxBotCount(Player player){
-        int bots = 2;
+        int bots = 0;
 
-        if(player.hasPermission("VIP")){
-            bots++;
-        }else if(player.hasPermission("VIP+")){
-            bots += 2;
-        }else if(player.hasPermission("MVP")){
-            bots += 3;
+        if(player.hasPermission("MVP++")){
+            bots += 10;
         }else if(player.hasPermission("MVP+")){
             bots += 5;
-        }else if(player.hasPermission("MVP++")){
-            bots += 8;
+        }else if(player.hasPermission("MVP")){
+            bots += 3;
+        }else if(player.hasPermission("VIP+")){
+            bots += 3;
+        }else if(player.hasPermission("VIP")){
+            bots+=3;
+        }else{
+            return 0;
         }
 
         return bots;

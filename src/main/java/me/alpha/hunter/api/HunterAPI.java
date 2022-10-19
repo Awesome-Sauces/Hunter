@@ -2,6 +2,7 @@ package me.alpha.hunter.api;
 
 import me.alpha.hunter.data.BoxArea;
 import me.alpha.hunter.data.HunterBots;
+import me.alpha.hunter.data.SpawnedBots;
 import me.alpha.hunter.items.hunterArmor;
 import me.alpha.hunter.main.hunterUtils;
 import me.alpha.hunter.main.math.findLocation;
@@ -21,12 +22,53 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.UUID;
+import java.util.*;
 
 public class HunterAPI {
-    public static NPC createHunterNon(Location loc){
-        return HunterAPI.createTargetHunter("Bob", loc, 2, 5,
-                0, 8, hunterArmor.IronSword, null,
+    public static NPC createHunterNon(Location loc, int time){
+
+        String bot = "MrShabadoo30000\n" +
+                "Axe2Grind\n" +
+                "EpicCat345\n" +
+                "ItzWiqu\n" +
+                "Enen07\n" +
+                "Knack7596\n" +
+                "StarFallAva\n" +
+                "Trintynt\n" +
+                "SilencedVoice90\n" +
+                "BeKinderToMe\n" +
+                "aBruno\n" +
+                "Skadey\n" +
+                "matscoboy\n" +
+                "TW9User\n" +
+                "Latshi\n" +
+                "BulkStraw\n" +
+                "3cpscombo\n" +
+                "Keruto_\n" +
+                "StarFallAva\n" +
+                "SilencedVoice90\n" +
+                "Ferd69\n" +
+                "JustSomeLoaf\n" +
+                "ItsZERD\n" +
+                "Hurricane13579\n" +
+                "HasjEnjoyer\n" +
+                "drenjamin\n" +
+                "PapaBold\n" +
+                "Chobblesome\n" +
+                "ICEASM\n" +
+                "bizbirikos21\n" +
+                "Pit_Hy\n" +
+                "Psui666\n" +
+                "Hangry1221\n" +
+                "carriedbyluck\n" +
+                "ASAjagt";
+
+        List<String> bots = Arrays.asList(bot.split("\n"));
+
+        Collections.shuffle(bots);
+
+        return HunterAPI.createTargetHunter(null, bots.get(5), loc, 1, 7,
+                time, 5, hunterArmor.IronSword, null,
                 hunterArmor.ChainChestplate, hunterArmor.ChainLeggings, hunterArmor.ChainBoots);
     }
 
@@ -83,7 +125,7 @@ public class HunterAPI {
                      */
 
                     if(npc.getEntity().isOnGround()){
-                        ((Player) npc.getEntity()).setVelocity(new Vector(0, .38, 0));
+                        ((Player) npc.getEntity()).setVelocity(new Vector(0, .36, 0));
 
 
 
@@ -116,7 +158,7 @@ public class HunterAPI {
         return npc;
     }
 
-    public static NPC createTargetHunter(String hunter_name, Location target, int speed, int jumpTime, int time, double damage, ItemStack sword, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots){
+    public static NPC createTargetHunter(UUID OWNER, String hunter_name, Location target, int speed, int jumpTime, int time, double damage, ItemStack sword, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots){
 
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, hunter_name);
 
@@ -130,9 +172,11 @@ public class HunterAPI {
         npc.setBukkitEntityType(EntityType.PLAYER);
         npc.getOrAddTrait(hunterTrait.class);
 
-        if (npc.hasTrait(hunterTrait.class)) {
+        /*if (npc.hasTrait(hunterTrait.class)) {
             Bukkit.broadcastMessage(ChatColor.GREEN + "Successfully created a Hunter!");
         }
+
+         */
 
         HunterBots.addHunterBot(npc);
 
@@ -168,9 +212,11 @@ public class HunterAPI {
 
                     npc.faceLocation(npc.getNavigator().getTargetAsLocation());
 
-                    if (npc.getEntity() != null && npc.getEntity().getLocation().getY() >= 150){
-                        npc.teleport(findLocation.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-                        npc.getNavigator().setTarget(findLocation.getLocation());
+                    if(npc.getEntity().getLocation().distance(new Location(Bukkit.getWorld("world"), -2, 124, 12))>=10){
+                        if(npc.getEntity().isOnGround()){
+                            npc.getNavigator().cancelNavigation();
+                            npc.getNavigator().setTarget(findLocation.getLocation());
+                        }
                     }
 
                     /*
@@ -188,7 +234,7 @@ public class HunterAPI {
 
                      */
 
-                    if(npc.getEntity().isOnGround()) ((Player) npc.getEntity()).setVelocity(new Vector(0, .38, 0));
+                    if(npc.getEntity().isOnGround()) ((Player) npc.getEntity()).setVelocity(new Vector(0, .36/*Previously 38*/, 0));
                 }
             }
         }.runTaskTimer(BoxArea.getPlugin(), jumpTime, jumpTime);
@@ -200,6 +246,7 @@ public class HunterAPI {
                 public void run() {
                     if(npc.isSpawned()){
                         runnable.cancel();
+                        if(OWNER!=null) SpawnedBots.removeRegisteredBot(OWNER);
                         npc.despawn();
                         npc.destroy();
                         CitizensAPI.getNPCRegistry().deregister(npc);

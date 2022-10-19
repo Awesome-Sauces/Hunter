@@ -4,6 +4,7 @@ import me.alpha.hunter.api.BotConfig;
 import me.alpha.hunter.api.BotConfigHelper;
 import me.alpha.hunter.api.HunterAPI;
 import me.alpha.hunter.api.hunterTrait;
+import me.alpha.hunter.data.SpawnedBots;
 import me.alpha.hunter.items.hunterArmor;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -15,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+
+import java.util.UUID;
 
 import static me.alpha.hunter.api.BotConfigHelper.botConfigExists;
 
@@ -40,16 +43,12 @@ public class MenuClick implements Listener {
 
         if(event.getCurrentItem().getTypeId() == 351){
 
-            if (!player.isOp()){
-                return;
-            }
-
             botConfig.setMaxBots(util.getMaxBotCount(player));
 
-            //BotConfigHelper.addSpawnedBot(String.valueOf(player.getUniqueId()));
 
-            /*
-            if(!player.isOp() && BotConfigHelper.getSpawnedBot(String.valueOf(player.getUniqueId())) > botConfig.getMaxBots()){
+
+
+            if(!player.isOp() && SpawnedBots.getRegisteredBots(player.getUniqueId()) > botConfig.getMaxBots()){
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         "&cYou have reached the max amount of bots that you can spawn!" +
                                 "&7To spawn more bots please purchase a rank upgrade at: &bhttps://betterpit.tebex.io"));
@@ -57,11 +56,11 @@ public class MenuClick implements Listener {
                 return;
             }
 
-             */
+            SpawnedBots.addRegisteredBots(player.getUniqueId());
 
             player.openInventory(bot.MainInventory(player));
 
-            HunterAPI.createTargetHunter(ChatColor.translateAlternateColorCodes('&',
+            HunterAPI.createTargetHunter(player.getUniqueId(),ChatColor.translateAlternateColorCodes('&',
                     ChatColor.stripColor(player.getDisplayName())), player.getLocation(), botConfig.getSpeed(), botConfig.getJumpTick(), botConfig.getTime(), botConfig.getDamage(), botConfig.getSword(), botConfig.getHelmet(), botConfig.getChestplate(), botConfig.getLeggings(), botConfig.getBoots());
         }else if(event.getCurrentItem().equals(bot.attackPattern)){
             player.openInventory(bot.ConfigMenu(player, ChatColor.GRAY + "Attack Pattern"));

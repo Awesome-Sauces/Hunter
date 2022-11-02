@@ -25,8 +25,8 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class HunterAPI {
-    public static NPC createHunterNon(Location loc, int time, boolean outskirt){
 
+    public static String getRandomName(){
         String bot = "MrShabadoo30000\n" +
                 "Axe2Grind\n" +
                 "EpicCat345\n" +
@@ -66,12 +66,15 @@ public class HunterAPI {
         List<String> bots = Arrays.asList(bot.split("\n"));
 
         Collections.shuffle(bots);
+        return bots.get(5);
+    }
 
+    public static NPC createHunterNon(Location loc, int time, boolean outskirt){
 
-        if(!outskirt) return HunterAPI.createTargetHunter(null, bots.get(5), loc, 1, 7,
+        if(!outskirt) return HunterAPI.createTargetHunter(null, getRandomName(), loc, 1, 7,
                 time, 5, hunterArmor.IronSword, null,
                 hunterArmor.ChainChestplate, hunterArmor.ChainLeggings, hunterArmor.ChainBoots);
-        return HunterAPI.createOutSkirtHunter(null, bots.get(5), loc, 1, 7,
+        return HunterAPI.createOutSkirtHunter(null, getRandomName(), loc, 1, 7,
                 time, 5, hunterArmor.IronSword, null,
                 hunterArmor.ChainChestplate, hunterArmor.ChainLeggings, hunterArmor.ChainBoots);
     }

@@ -52,6 +52,50 @@ public class hunterUtils {
         return playerList;
     }
 
+    public static Player getClosetNearby(Entity hunter) {
+        if(hunter==null) return null;
+
+
+        List<Player> playerList = new ArrayList<Player>();
+        List<NPC> npcList = new ArrayList<NPC>();
+
+        for(NPC npc : CitizensAPI.getNPCRegistry()){
+            if(npc.getEntity().getType().equals(EntityType.PLAYER) &&
+            npc.getEntity().getWorld().equals(hunter.getWorld()) &&
+            !npc.isProtected()) playerList.add((Player)npc.getEntity());
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()){
+            if(player.getWorld().equals(hunter.getWorld())){
+                playerList.add(player);
+            }
+        }
+
+        Player lastPlayer = null;
+
+        for (Player players : playerList){
+            if(lastPlayer==null){
+                lastPlayer=players;
+            }else{
+                double distance1 = hunter.getLocation().distance(lastPlayer.getLocation());
+                double distance2 = hunter.getLocation().distance(players.getLocation());
+
+                if(distance2 > distance1){
+                    continue;
+                }else if (distance2 < distance1){
+                    lastPlayer=players;
+                    continue;
+                }else{
+                    lastPlayer=players;
+                }
+
+            }
+        }
+
+
+        return lastPlayer;
+    }
+
     public static Player getNearbyPlayers(Entity hunter, int x) {
 
         if (hunter != null) {

@@ -27,6 +27,33 @@ public class findLocation {
         return locations.get(0);
     }
 
+    public static Location getRandomLocation(Location location){
+
+        List<Location> locations = new ArrayList<>();
+        locations.add(new Location(location.getWorld(), location.getX()+1,
+                location.getY(),
+                location.getZ()+1));
+        locations.add(new Location(location.getWorld(), location.getX()-1,
+                location.getY(),
+                location.getZ()-1));
+        locations.add(new Location(location.getWorld(), location.getX()+1,
+                location.getY(),
+                location.getZ()));
+        locations.add(new Location(location.getWorld(), location.getX()-1,
+                location.getY(),
+                location.getZ()));
+        locations.add(new Location(location.getWorld(), location.getX(),
+                location.getY(),
+                location.getZ()-1));
+        locations.add(new Location(location.getWorld(), location.getX(),
+                location.getY(),
+                location.getZ()+1));
+
+        Collections.shuffle(locations);
+
+        return locations.get(0);
+    }
+
     public static Location getOutskirtsLocation(NPC npc){
 
         List<Location> locations = new ArrayList<>();

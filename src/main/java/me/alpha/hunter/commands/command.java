@@ -4,6 +4,7 @@ package me.alpha.hunter.commands;
 import me.alpha.hunter.api.HunterAPI;
 import me.alpha.hunter.api.HunterTarget;
 import me.alpha.hunter.api.hunterTrait;
+import me.alpha.hunter.bot.BotPlayer;
 import me.alpha.hunter.data.BoxArea;
 import me.alpha.hunter.data.HunterBots;
 import me.alpha.hunter.main.bot.bot;
@@ -84,12 +85,23 @@ public class command implements CommandExecutor {
                 }
             }else if(args[0].equalsIgnoreCase("atest")){
 
+                BotPlayer bot = new BotPlayer();
+
+                bot.getBot();
+
+                bot.spawnBot(player.getLocation());
+
+                bot.run();
+
+                /*
                 if(args.length < 5) {
                     player.sendMessage(ChatColor.RED + "Example: /hunter atest <BotName> <Speed> <TickInJump> <TickInDespawn>");
                     return true;
                 }
 
                 HunterAPI.createTargetHunter(args[1], player, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), 5);
+
+                 */
 
 
             }else {

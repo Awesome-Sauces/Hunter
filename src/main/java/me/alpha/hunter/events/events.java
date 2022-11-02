@@ -58,7 +58,7 @@ public class events implements Listener {
 
  */
 
-/*
+
     @EventHandler
     public void handleDeath(NPCDamageByEntityEvent event){
         NPC npc = event.getNPC();
@@ -67,12 +67,11 @@ public class events implements Listener {
             if(player.getHealth() - event.getDamage() <= 4){
                 event.setCancelled(true);
                 player.setHealth(player.getMaxHealth());
-                npc.teleport(new Location(Bukkit.getWorld("world"), 0, 100, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
+                npc.teleport(new Location(Bukkit.getWorld("world"), 0.5, 75, 0.5), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 PlayerDeathEvent events = new PlayerDeathEvent(player, null, 1, 1, "fold harder");
                 Bukkit.getServer().getPluginManager().callEvent(events);
             }
         }
     }
 
- */
 }

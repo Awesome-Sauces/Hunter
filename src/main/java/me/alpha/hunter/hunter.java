@@ -9,6 +9,7 @@ import me.alpha.hunter.data.HunterBots;
 import me.alpha.hunter.events.events;
 import me.alpha.hunter.items.hunterArmor;
 import me.alpha.hunter.main.bot.MenuClick;
+import me.alpha.hunter.main.bot.StartUp;
 import me.alpha.hunter.main.hunterUtils;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -39,11 +40,13 @@ import static me.alpha.hunter.main.hunterUtils.*;
 public class hunter extends JavaPlugin {
 
 
-    public hunter HUNTER_INSTANCE = this;
+    public static hunter HUNTER_INSTANCE;
 
 
     @Override
     public void onEnable() {
+
+        HUNTER_INSTANCE = this;
 
         hunterArmor.init();
 
@@ -65,6 +68,7 @@ public class hunter extends JavaPlugin {
 
         long timeInTicks = 0L;
 
+/*
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
             @Override
             public void run() {
@@ -83,8 +87,7 @@ public class hunter extends JavaPlugin {
                             if(CitizensAPI.getTraitFactory().getRegisteredTraits().contains(net.citizensnpcs.api.trait.TraitInfo.create(hunterTrait.class).withName("hunterTrait"))) {
                                 this.cancel();
                                 return;
-                            }
-                            net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(hunterTrait.class).withName("hunterTrait"));
+                            }else net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(hunterTrait.class).withName("hunterTrait"));
                             this.cancel();
                         }
 
@@ -94,8 +97,13 @@ public class hunter extends JavaPlugin {
             }
         }, 80L);
 
+ */
 
 
+
+
+
+        StartUp.start();
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[Hunter] is up and running!");
 
     }

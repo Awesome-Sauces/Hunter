@@ -25,7 +25,7 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class HunterAPI {
-    public static NPC createHunterNon(Location loc, int time){
+    public static NPC createHunterNon(Location loc, int time, boolean outskirt){
 
         String bot = "MrShabadoo30000\n" +
                 "Axe2Grind\n" +
@@ -67,7 +67,11 @@ public class HunterAPI {
 
         Collections.shuffle(bots);
 
-        return HunterAPI.createTargetHunter(null, bots.get(5), loc, 1, 7,
+
+        if(!outskirt) return HunterAPI.createTargetHunter(null, bots.get(5), loc, 1, 7,
+                time, 5, hunterArmor.IronSword, null,
+                hunterArmor.ChainChestplate, hunterArmor.ChainLeggings, hunterArmor.ChainBoots);
+        return HunterAPI.createOutSkirtHunter(null, bots.get(5), loc, 1, 7,
                 time, 5, hunterArmor.IronSword, null,
                 hunterArmor.ChainChestplate, hunterArmor.ChainLeggings, hunterArmor.ChainBoots);
     }
@@ -91,12 +95,13 @@ public class HunterAPI {
 
         npc.setProtected(false);
 
+        HunterTarget targeter = new HunterTarget(npc,damage);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
             @Override
             public void run() {
                 npc.getNavigator().setTarget(target.getLocation());
-                new HunterTarget(npc, damage).run();
+                targeter.run();
             }
         }, 20L);
 
@@ -194,11 +199,12 @@ public class HunterAPI {
 
         npc.setProtected(false);
 
+        HunterTarget targeter = new HunterTarget(npc,damage);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
             @Override
             public void run() {
-                new HunterTarget(npc, damage).run();
+                targeter.run();
 
             }
         }, 20L);
@@ -212,12 +218,111 @@ public class HunterAPI {
 
                     npc.faceLocation(npc.getNavigator().getTargetAsLocation());
 
-                    if(npc.getEntity().getLocation().distance(new Location(Bukkit.getWorld("world"), -2, 124, 12))>=10){
+                    if(npc.getEntity().getLocation().distance(new Location(npc.getEntity().getWorld(), 0, 82, 0))>=10){
                         if(npc.getEntity().isOnGround()){
                             npc.getNavigator().cancelNavigation();
-                            npc.getNavigator().setTarget(findLocation.getLocation());
+                            npc.getNavigator().setTarget(findLocation.getLocation(npc));
                         }
                     }
+
+                    /*
+
+                    if(npc.getEntity().getLocation().getY() - 82 >= 10){
+                        npc.teleport(new Location(Bukkit.getWorld("world"), 0, 82, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
+
+                        Location location = findLocation.getLocation();
+
+                        if(npc.getNavigator().isNavigating() && npc.getNavigator().getTargetType().equals(TargetType.ENTITY) && npc.getEntity().getLocation().distance(npc.getNavigator().getEntityTarget().getTarget().getLocation()) >= 4.5){
+                            npc.getNavigator().cancelNavigation();
+                            npc.getNavigator().setTarget(location);
+                        }
+                    }
+
+                     */
+
+                    if(npc.getEntity().isOnGround()) ((Player) npc.getEntity()).setVelocity(new Vector(0, .36/*Previously 38*/, 0));
+                }
+            }
+        }.runTaskTimer(BoxArea.getPlugin(), jumpTime, jumpTime);
+
+
+        if (time > 0) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
+                @Override
+                public void run() {
+                    if(npc.isSpawned()){
+                        runnable.cancel();
+                        if(OWNER!=null) SpawnedBots.removeRegisteredBot(OWNER);
+                        npc.despawn();
+                        npc.destroy();
+                        CitizensAPI.getNPCRegistry().deregister(npc);
+                        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&c&lA target has been removed from your game for hacking or abuse &bThanks for reporting it!"));
+                    }
+                }
+            }, time * 20L);
+        }
+
+
+
+        return npc;
+    }
+
+    public static NPC createOutSkirtHunter(UUID OWNER, String hunter_name, Location target, int speed, int jumpTime, int time, double damage, ItemStack sword, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots){
+
+        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, hunter_name);
+
+        //String uuid = String.valueOf(target.getUniqueId());
+
+        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, boots);
+        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, leggings);
+        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, chestplate);
+        if(helmet != null) npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HELMET, helmet);
+        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, sword);
+        npc.setBukkitEntityType(EntityType.PLAYER);
+        npc.getOrAddTrait(hunterTrait.class);
+
+        /*if (npc.hasTrait(hunterTrait.class)) {
+            Bukkit.broadcastMessage(ChatColor.GREEN + "Successfully created a Hunter!");
+        }
+
+         */
+
+        HunterBots.addHunterBot(npc);
+
+        if (!npc.isSpawned()){
+            npc.spawn(target);
+        }
+
+        npc.teleport(target, PlayerTeleportEvent.TeleportCause.PLUGIN);
+
+
+        npc.getNavigator().getDefaultParameters()
+
+                .pathDistanceMargin(500)
+                .attackRange(30)
+                .speedModifier(Math.max(2, speed));
+
+
+        npc.setProtected(false);
+
+        HunterTarget targeter = new HunterTarget(npc,damage);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                targeter.run(true);
+
+            }
+        }, 20L);
+
+
+        BukkitTask runnable = new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                if(npc.isSpawned()){
+
+                    npc.faceLocation(npc.getNavigator().getTargetAsLocation());
 
                     /*
 

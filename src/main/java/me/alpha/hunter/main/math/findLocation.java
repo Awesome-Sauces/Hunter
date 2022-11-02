@@ -11,16 +11,56 @@ import java.util.List;
 import java.util.Random;
 
 public class findLocation {
-    public static Location getLocation(){
+    public static Location getLocation(NPC npc){
 
         List<Location> locations = new ArrayList<>();
-        locations.add(new Location(Bukkit.getWorld("world"), -2, 124, 12));
-        locations.add(new Location(Bukkit.getWorld("world"), -5, 124, 15));
-        locations.add(new Location(Bukkit.getWorld("world"), -5, 124, 9));
-        locations.add(new Location(Bukkit.getWorld("world"), 0, 124, 11));
-        locations.add(new Location(Bukkit.getWorld("world"), -5, 124, 15));
-        locations.add(new Location(Bukkit.getWorld("world"), -1, 124, 15));
-        locations.add(new Location(Bukkit.getWorld("world"), -4, 124, 10));
+        locations.add(new Location(npc.getEntity().getWorld(), 3, 82, 3));
+        locations.add(new Location(npc.getEntity().getWorld(), 0, 82, 0));
+        locations.add(new Location(npc.getEntity().getWorld(), -3, 82, 2));
+        locations.add(new Location(npc.getEntity().getWorld(), -1, 82, 0));
+        locations.add(new Location(npc.getEntity().getWorld(), 0, 82, 0));
+        locations.add(new Location(npc.getEntity().getWorld(), 1, 82, -3));
+        locations.add(new Location(npc.getEntity().getWorld(), 4, 82, 0));
+
+        Collections.shuffle(locations);
+
+        return locations.get(0);
+    }
+
+    public static Location getOutskirtsLocation(NPC npc){
+
+        List<Location> locations = new ArrayList<>();
+        locations.add(new Location(npc.getEntity().getWorld(), -29, 84, -28.5));
+        locations.add(new Location(npc.getEntity().getWorld(), -15, 88, -47));
+        locations.add(new Location(npc.getEntity().getWorld(), -21, 88, -67));
+        locations.add(new Location(npc.getEntity().getWorld(), 24.5, 91, -88));
+        locations.add(new Location(npc.getEntity().getWorld(), -45, 92, -77));
+        locations.add(new Location(npc.getEntity().getWorld(), -43, 95, -58));
+        locations.add(new Location(npc.getEntity().getWorld(), -72, 88, -46));
+
+        locations.add(new Location(npc.getEntity().getWorld(), -57, 90, 16));
+        locations.add(new Location(npc.getEntity().getWorld(), -57, 90, 16));
+        locations.add(new Location(npc.getEntity().getWorld(), -74, 94, 54));
+        locations.add(new Location(npc.getEntity().getWorld(), -57, 94, 72));
+        locations.add(new Location(npc.getEntity().getWorld(), -25, 90, 65));
+        locations.add(new Location(npc.getEntity().getWorld(), -58, 85, 78));
+        locations.add(new Location(npc.getEntity().getWorld(), -57, 85, 54));
+
+        locations.add(new Location(npc.getEntity().getWorld(), 11, 86, 89));
+        locations.add(new Location(npc.getEntity().getWorld(), 11, 86, 89));
+        locations.add(new Location(npc.getEntity().getWorld(), 24, 84, 42));
+        locations.add(new Location(npc.getEntity().getWorld(), 55, 87, 29));
+        locations.add(new Location(npc.getEntity().getWorld(), 83, 87, 32));
+        locations.add(new Location(npc.getEntity().getWorld(), 76, 93, 65));
+        locations.add(new Location(npc.getEntity().getWorld(), 63, 93, 58));
+
+        locations.add(new Location(npc.getEntity().getWorld(), 41, 88, -73));
+        locations.add(new Location(npc.getEntity().getWorld(), 41, 88, -73));
+        locations.add(new Location(npc.getEntity().getWorld(), 25, 88, -84));
+        locations.add(new Location(npc.getEntity().getWorld(), 25, 88, -84));
+        locations.add(new Location(npc.getEntity().getWorld(), 63, 86, -38));
+        locations.add(new Location(npc.getEntity().getWorld(), 75, 94, -65));
+        locations.add(new Location(npc.getEntity().getWorld(), 61, 91, -69));
 
         Collections.shuffle(locations);
 

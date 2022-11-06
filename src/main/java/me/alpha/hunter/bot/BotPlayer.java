@@ -4,6 +4,7 @@ import me.alpha.hunter.api.HunterAPI;
 import me.alpha.hunter.api.hunterTrait;
 import me.alpha.hunter.data.BoxArea;
 import me.alpha.hunter.data.HunterBots;
+import me.alpha.hunter.data.SpawnedBots;
 import me.alpha.hunter.hunter;
 import me.alpha.hunter.items.hunterArmor;
 import me.alpha.hunter.main.hunterUtils;
@@ -15,6 +16,7 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
 import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
@@ -34,7 +36,9 @@ import static me.alpha.hunter.main.hunterUtils.gearNearby;
 public class BotPlayer {
 
     private NPC bot;
+    private Player OWNER;
     private BotAction action = BotAction.FROZEN;
+    private Location pauseLocation;
     private String name;
     private int speed;
     private int jumpTime;
@@ -49,7 +53,7 @@ public class BotPlayer {
 
     public BotPlayer() {
         this.name = HunterAPI.getRandomName();
-        this.speed = 3;
+        this.speed = 2;
         this.jumpTime = 7;
         this.time = 60;
         this.damage = 7;
@@ -73,6 +77,23 @@ public class BotPlayer {
         this.leggings = hunterArmor.ChainLeggings;
         this.boots = hunterArmor.ChainBoots;
         this.sword = hunterArmor.IronSword;
+    }
+
+    public BotPlayer(Player owner, String name, int speed, int time, int damage, ItemStack helmet,
+                     ItemStack chestplate, ItemStack leggings, ItemStack boots,
+                        ItemStack sword) {
+        this.OWNER = owner;
+        this.name = name;
+        this.speed = speed;
+        this.jumpTime = 7;
+        this.time = time;
+        this.damage = damage;
+
+        this.helmet = helmet;
+        this.chestplate = chestplate;
+        this.leggings = leggings;
+        this.boots = boots;
+        this.sword = sword;
     }
 
     public NPC getBot(){
@@ -118,10 +139,30 @@ public class BotPlayer {
     }
 
     public void run(){
+        // De-spawn Bot
+        if (time > 0) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
+                @Override
+                public void run() {
+                    if(bot.isSpawned()){
+                        if(OWNER!=null) SpawnedBots.removeRegisteredBot(OWNER.getUniqueId());
+                        bot.despawn();
+                        bot.destroy();
+                        CitizensAPI.getNPCRegistry().deregister(bot);
+                        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&c&lA bot has been removed from your game for hacking or abuse &bThanks for reporting it!"));
+                    }
+                }
+            }, time * 20L);
+        }
+
         // Runnable for Jumping
         new HunterRunnable() {
             @Override
             public void code(){
+                if(!bot.isSpawned()){
+                    this.cancel();
+                }
+
                 if(bot.getEntity().isOnGround())((Player) bot.getEntity()).setVelocity(new Vector(0, .36/*Previously 38*/, 0));
             }
         }.execute(this.jumpTime);
@@ -130,6 +171,10 @@ public class BotPlayer {
         new HunterRunnable() {
             @Override
             public void code(){
+                if(!bot.isSpawned()){
+                    this.cancel();
+                }
+
                 if(bot.getNavigator().isNavigating()){
                     bot.faceLocation(bot.getNavigator().getTargetAsLocation());
                 }
@@ -140,6 +185,10 @@ public class BotPlayer {
         new HunterRunnable() {
             @Override
             public void code(){
+                if(!bot.isSpawned()){
+                    this.cancel();
+                }
+
                 if(getAction().equals(BotAction.PATHFINDING)) return;
                 if(getAction().equals(BotAction.FROZEN)) return;
 
@@ -211,19 +260,17 @@ public class BotPlayer {
         new HunterRunnable() {
             @Override
             public void code(){
+                if(!bot.isSpawned()){
+                    this.cancel();
+                }
+
                 if(getAction().equals(BotAction.ATTACKING)) return;
 
-                List<Player> nearby = gearNearby(bot.getEntity(), 7);
-
-                if(!nearby.isEmpty())  setAction(BotAction.ATTACKING);
-
-                Location location = bot.getEntity().getLocation();
-
-                if(bot.getNavigator().isNavigating()) return;
-                if(!bot.getEntity().isOnGround()) return;
-
-                bot.getNavigator().setTarget(hunterUtils.getClosetNearby(bot.getEntity()).getLocation());
-
+                if(bot.getEntity().isOnGround() &&
+                        !bot.getNavigator().isNavigating()) {
+                    bot.getNavigator().setTarget(hunterUtils.getClosetNearby((Player) bot.getEntity()).getLocation());
+                    setAction(BotAction.ATTACKING);
+                }
             }
         }.execute(5);
 
@@ -231,6 +278,10 @@ public class BotPlayer {
         new HunterRunnable() {
             @Override
             public void code(){
+
+                if(!bot.isSpawned()){
+                    this.cancel();
+                }
 
                 if(getAction().equals(BotAction.PATHFINDING)) return;
                 if(getAction().equals(BotAction.ATTACKING)) return;
@@ -240,7 +291,12 @@ public class BotPlayer {
                     if(bot.getNavigator().isNavigating()) return;
                     if(!bot.getEntity().isOnGround()) return;
 
-                    bot.getNavigator().setTarget(hunterUtils.getClosetNearby(bot.getEntity()).getLocation());
+                    if(bot.getEntity().isOnGround()) {
+                        bot.getNavigator().cancelNavigation();
+                        Player target = hunterUtils.getClosetNearby((Player) bot.getEntity());
+                        bot.getNavigator().setTarget(target, false);
+                        setAction(BotAction.ATTACKING);
+                    }
                 }
 
             }

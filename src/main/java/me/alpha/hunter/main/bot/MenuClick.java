@@ -4,6 +4,7 @@ import me.alpha.hunter.api.BotConfig;
 import me.alpha.hunter.api.BotConfigHelper;
 import me.alpha.hunter.api.HunterAPI;
 import me.alpha.hunter.api.hunterTrait;
+import me.alpha.hunter.bot.BotPlayer;
 import me.alpha.hunter.data.SpawnedBots;
 import me.alpha.hunter.items.hunterArmor;
 import net.citizensnpcs.api.CitizensAPI;
@@ -60,8 +61,17 @@ public class MenuClick implements Listener {
 
             player.openInventory(bot.MainInventory(player));
 
-            HunterAPI.createTargetHunter(player.getUniqueId(),ChatColor.translateAlternateColorCodes('&',
-                    ChatColor.stripColor(player.getDisplayName())), player.getLocation(), botConfig.getSpeed(), botConfig.getJumpTick(), botConfig.getTime(), botConfig.getDamage(), botConfig.getSword(), botConfig.getHelmet(), botConfig.getChestplate(), botConfig.getLeggings(), botConfig.getBoots());
+            BotPlayer bot = new BotPlayer(player, ChatColor.translateAlternateColorCodes('&',
+                    ChatColor.stripColor(player.getDisplayName())), botConfig.getSpeed(),
+                    botConfig.getTime(), (int) botConfig.getDamage(),
+                    botConfig.getHelmet(), botConfig.getChestplate(), botConfig.getLeggings(), botConfig.getBoots(),
+                    botConfig.getSword());
+
+            bot.getBot();
+
+            bot.spawnBot(player.getLocation());
+
+            bot.run();
         }else if(event.getCurrentItem().equals(bot.attackPattern)){
             player.openInventory(bot.ConfigMenu(player, ChatColor.GRAY + "Attack Pattern"));
         }else if(event.getCurrentItem().equals(bot.armor)){

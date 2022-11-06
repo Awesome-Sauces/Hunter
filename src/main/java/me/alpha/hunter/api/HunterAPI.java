@@ -1,5 +1,6 @@
 package me.alpha.hunter.api;
 
+import me.alpha.hunter.bot.BotPlayer;
 import me.alpha.hunter.data.BoxArea;
 import me.alpha.hunter.data.HunterBots;
 import me.alpha.hunter.data.SpawnedBots;
@@ -61,7 +62,18 @@ public class HunterAPI {
                 "Psui666\n" +
                 "Hangry1221\n" +
                 "carriedbyluck\n" +
-                "ASAjagt";
+                "ASAjagt\n" +
+                "pingpng\n" +
+                "CommentFirst\n" +
+                "CatboyMaid4Hire\n" +
+                "Ann3frankisdank\n" +
+                "JazzyWazzy_\n" +
+                "imharrysmh\n" +
+                "WhyPit\n" +
+                "penelope7\n" +
+                "Grizloy\n" +
+                "HxPulse\n" +
+                "Sakr_";
 
         List<String> bots = Arrays.asList(bot.split("\n"));
 
@@ -71,203 +83,23 @@ public class HunterAPI {
 
     public static NPC createHunterNon(Location loc, int time, boolean outskirt){
 
-        if(!outskirt) return HunterAPI.createTargetHunter(null, getRandomName(), loc, 1, 7,
-                time, 5, hunterArmor.IronSword, null,
-                hunterArmor.ChainChestplate, hunterArmor.ChainLeggings, hunterArmor.ChainBoots);
+        if(!outskirt) {
+            BotPlayer bot = new BotPlayer(null, getRandomName(), 2,
+                    time, 7,
+                    null,
+                    hunterArmor.ChainChestplate, hunterArmor.ChainLeggings, hunterArmor.ChainBoots,
+                    hunterArmor.IronSword);
+
+            bot.getBot();
+
+            bot.spawnBot(loc);
+
+            bot.run();
+            return bot.getBot();
+        }
         return HunterAPI.createOutSkirtHunter(null, getRandomName(), loc, 1, 7,
                 time, 5, hunterArmor.IronSword, null,
                 hunterArmor.ChainChestplate, hunterArmor.ChainLeggings, hunterArmor.ChainBoots);
-    }
-
-    public static NPC createTargetHunter(String hunter_name, Player target, int speed, int jumpTime, int time, double damage){
-
-        NPC npc = hunterUtils.createHunterBot(hunter_name, true);
-        HunterBots.addHunterBot(npc);
-
-        if (!npc.isSpawned()){
-            npc.spawn(target.getLocation());
-        }
-        npc.teleport(target.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-
-        npc.faceLocation(target.getLocation());
-
-        npc.getNavigator().getDefaultParameters()
-                .attackRange(30)
-                .speedModifier(Math.max(2, speed));
-
-
-        npc.setProtected(false);
-
-        HunterTarget targeter = new HunterTarget(npc,damage);
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                npc.getNavigator().setTarget(target.getLocation());
-                targeter.run();
-            }
-        }, 20L);
-
-
-        BukkitTask runnable = new BukkitRunnable() {
-
-            @Override
-            public void run() {
-
-                if(npc.isSpawned()){
-                    npc.faceLocation(target.getLocation());
-
-/*
-
-                    if(npc.getEntity().getLocation().getY() - 82 >= 10){
-                        npc.teleport(new Location(Bukkit.getWorld("world"), 0, 82, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
-
-                        Location location = findLocation.getLocation();
-
-                        if(npc.getNavigator().isNavigating() && npc.getNavigator().getTargetType().equals(TargetType.ENTITY) && npc.getEntity().getLocation().distance(npc.getNavigator().getEntityTarget().getTarget().getLocation()) >= 4.5){
-                            npc.getNavigator().cancelNavigation();
-                            npc.getNavigator().setTarget(location);
-                        }
-                    }
-
-                     */
-
-                    if(npc.getEntity().isOnGround()){
-                        ((Player) npc.getEntity()).setVelocity(new Vector(0, .36, 0));
-
-
-
-                        //((target) npc.getEntity()).setSneaking(true);
-                    }
-                }
-
-
-            }
-        }.runTaskTimer(BoxArea.getPlugin(), jumpTime, jumpTime);
-
-
-        if (time > 0) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    if(npc.isSpawned()){
-                        runnable.cancel();
-                        npc.despawn();
-                        npc.destroy();
-                        CitizensAPI.getNPCRegistry().deregister(npc);
-                        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&c&lA target has been removed from your game for hacking or abuse &bThanks for reporting it!"));
-                    }
-                }
-            }, time * 20L);
-        }
-
-
-
-        return npc;
-    }
-
-    public static NPC createTargetHunter(UUID OWNER, String hunter_name, Location target, int speed, int jumpTime, int time, double damage, ItemStack sword, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots){
-
-        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, hunter_name);
-
-        //String uuid = String.valueOf(target.getUniqueId());
-
-        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.BOOTS, boots);
-        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.LEGGINGS, leggings);
-        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.CHESTPLATE, chestplate);
-        if(helmet != null) npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HELMET, helmet);
-        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, sword);
-        npc.setBukkitEntityType(EntityType.PLAYER);
-        npc.getOrAddTrait(hunterTrait.class);
-
-        /*if (npc.hasTrait(hunterTrait.class)) {
-            Bukkit.broadcastMessage(ChatColor.GREEN + "Successfully created a Hunter!");
-        }
-
-         */
-
-        HunterBots.addHunterBot(npc);
-
-        if (!npc.isSpawned()){
-            npc.spawn(target);
-        }
-
-        npc.teleport(target, PlayerTeleportEvent.TeleportCause.PLUGIN);
-
-
-        npc.getNavigator().getDefaultParameters()
-                .attackRange(30)
-                .speedModifier(Math.max(2, speed));
-
-
-        npc.setProtected(false);
-
-        HunterTarget targeter = new HunterTarget(npc,damage);
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                targeter.run();
-
-            }
-        }, 20L);
-
-
-        BukkitTask runnable = new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                if(npc.isSpawned()){
-
-                    npc.faceLocation(npc.getNavigator().getTargetAsLocation());
-
-                    if(npc.getEntity().getLocation().distance(new Location(npc.getEntity().getWorld(), 0, 82, 0))>=10){
-                        if(npc.getEntity().isOnGround()){
-                            npc.getNavigator().cancelNavigation();
-                            npc.getNavigator().setTarget(findLocation.getLocation(npc));
-                        }
-                    }
-
-                    /*
-
-                    if(npc.getEntity().getLocation().getY() - 82 >= 10){
-                        npc.teleport(new Location(Bukkit.getWorld("world"), 0, 82, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
-
-                        Location location = findLocation.getLocation();
-
-                        if(npc.getNavigator().isNavigating() && npc.getNavigator().getTargetType().equals(TargetType.ENTITY) && npc.getEntity().getLocation().distance(npc.getNavigator().getEntityTarget().getTarget().getLocation()) >= 4.5){
-                            npc.getNavigator().cancelNavigation();
-                            npc.getNavigator().setTarget(location);
-                        }
-                    }
-
-                     */
-
-                    if(npc.getEntity().isOnGround()) ((Player) npc.getEntity()).setVelocity(new Vector(0, .36/*Previously 38*/, 0));
-                }
-            }
-        }.runTaskTimer(BoxArea.getPlugin(), jumpTime, jumpTime);
-
-
-        if (time > 0) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(BoxArea.getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    if(npc.isSpawned()){
-                        runnable.cancel();
-                        if(OWNER!=null) SpawnedBots.removeRegisteredBot(OWNER);
-                        npc.despawn();
-                        npc.destroy();
-                        CitizensAPI.getNPCRegistry().deregister(npc);
-                        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&c&lA target has been removed from your game for hacking or abuse &bThanks for reporting it!"));
-                    }
-                }
-            }, time * 20L);
-        }
-
-
-
-        return npc;
     }
 
     public static NPC createOutSkirtHunter(UUID OWNER, String hunter_name, Location target, int speed, int jumpTime, int time, double damage, ItemStack sword, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots){
@@ -358,7 +190,7 @@ public class HunterAPI {
                         npc.despawn();
                         npc.destroy();
                         CitizensAPI.getNPCRegistry().deregister(npc);
-                        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&c&lA target has been removed from your game for hacking or abuse &bThanks for reporting it!"));
+                        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&c&lA bot has been removed from your game for hacking or abuse &bThanks for reporting it!"));
                     }
                 }
             }, time * 20L);

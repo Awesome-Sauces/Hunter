@@ -52,7 +52,7 @@ public class hunterUtils {
         return playerList;
     }
 
-    public static Player getClosetNearby(Entity hunter) {
+    public static Player getClosetNearby(Player hunter) {
         if(hunter==null) return null;
 
 
@@ -62,11 +62,12 @@ public class hunterUtils {
         for(NPC npc : CitizensAPI.getNPCRegistry()){
             if(npc.getEntity().getType().equals(EntityType.PLAYER) &&
             npc.getEntity().getWorld().equals(hunter.getWorld()) &&
-            !npc.isProtected()) playerList.add((Player)npc.getEntity());
+            !npc.isProtected() && npc.getEntity() != hunter) playerList.add((Player)npc.getEntity());
         }
 
         for (Player player : Bukkit.getOnlinePlayers()){
-            if(player.getWorld().equals(hunter.getWorld())){
+            if(player.getWorld().equals(hunter.getWorld()) &&
+            player != hunter){
                 playerList.add(player);
             }
         }

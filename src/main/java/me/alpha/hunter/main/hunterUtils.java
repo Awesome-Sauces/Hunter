@@ -60,7 +60,7 @@ public class hunterUtils {
         List<NPC> npcList = new ArrayList<NPC>();
 
         for(NPC npc : CitizensAPI.getNPCRegistry()){
-            if(npc.getEntity().getType().equals(EntityType.PLAYER) &&
+            if(npc.getEntity() != null && npc.getEntity().getType().equals(EntityType.PLAYER) &&
             npc.getEntity().getWorld().equals(hunter.getWorld()) &&
             !npc.isProtected() && npc.getEntity() != hunter) playerList.add((Player)npc.getEntity());
         }

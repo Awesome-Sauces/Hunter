@@ -57,10 +57,25 @@ public class findLocation {
     public static Location getOutskirtsLocation(NPC npc){
 
         List<Location> locations = new ArrayList<>();
-        locations.add(new Location(npc.getEntity().getWorld(), -29, 84, -28.5));
+
+        // Four Seasons
+        locations.add(new Location(npc.getEntity().getWorld(), -57, 87, -38));
+        locations.add(new Location(npc.getEntity().getWorld(), -41, 87, -62));
+        locations.add(new Location(npc.getEntity().getWorld(), -58, 86, -64));
+
+        locations.add(new Location(npc.getEntity().getWorld(), 41, 85, -12));
+        locations.add(new Location(npc.getEntity().getWorld(), 40, 85, -32));
+        locations.add(new Location(npc.getEntity().getWorld(), 20, 85, -37));
+
+        locations.add(new Location(npc.getEntity().getWorld(), 39, 85, 46));
+        locations.add(new Location(npc.getEntity().getWorld(), 46, 85, 34));
+        locations.add(new Location(npc.getEntity().getWorld(), 34, 85, 61));
+
+        /* Crab MAP
+        locations.add(new Location(npc.getEntity().getWorld(), -29, 84, -28));
         locations.add(new Location(npc.getEntity().getWorld(), -15, 88, -47));
         locations.add(new Location(npc.getEntity().getWorld(), -21, 88, -67));
-        locations.add(new Location(npc.getEntity().getWorld(), 24.5, 91, -88));
+        locations.add(new Location(npc.getEntity().getWorld(), 24, 91, -88));
         locations.add(new Location(npc.getEntity().getWorld(), -45, 92, -77));
         locations.add(new Location(npc.getEntity().getWorld(), -43, 95, -58));
         locations.add(new Location(npc.getEntity().getWorld(), -72, 88, -46));
@@ -89,6 +104,8 @@ public class findLocation {
         locations.add(new Location(npc.getEntity().getWorld(), 75, 94, -65));
         locations.add(new Location(npc.getEntity().getWorld(), 61, 91, -69));
 
+
+         */
         Collections.shuffle(locations);
 
         return locations.get(0);

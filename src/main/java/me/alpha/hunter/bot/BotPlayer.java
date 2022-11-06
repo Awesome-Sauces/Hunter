@@ -163,7 +163,7 @@ public class BotPlayer {
                     this.cancel();
                 }
 
-                if(bot.getEntity().isOnGround())((Player) bot.getEntity()).setVelocity(new Vector(0, .36/*Previously 38*/, 0));
+                if(bot.getEntity() != null && bot.getEntity().isOnGround())((Player) bot.getEntity()).setVelocity(new Vector(0, .36/*Previously 38*/, 0));
             }
         }.execute(this.jumpTime);
 
@@ -191,6 +191,7 @@ public class BotPlayer {
 
                 if(getAction().equals(BotAction.PATHFINDING)) return;
                 if(getAction().equals(BotAction.FROZEN)) return;
+                if(bot.getEntity()==null) return;
 
                 if(bot.getEntity().isOnGround())((Player) bot.getEntity()).setVelocity(new Vector(0, .36/*Previously 38*/, 0));
 
@@ -205,7 +206,7 @@ public class BotPlayer {
 
 
 
-                if(!bot.getNavigator().isNavigating() && bot.getEntity().isOnGround()){
+                if(!bot.getNavigator().isNavigating() && bot.getEntity() != null && bot.getEntity().isOnGround()){
                     Player lastPlayer = null;
 
                     for (Player players : nearby){
@@ -236,10 +237,10 @@ public class BotPlayer {
                     Entity player = bot.getNavigator().getEntityTarget().getTarget();
 
 
-                    if(player.getType().equals(EntityType.PLAYER) && player.getLocation().distance(bot.getEntity().getLocation()) <= 3.5 &&
+                    if(bot.getEntity() != null &&player.getType().equals(EntityType.PLAYER) && player.getLocation().distance(bot.getEntity().getLocation()) <= 3.5 &&
                     player.isOnGround() && CitizensAPI.getNPCRegistry().isNPC(player)) {
                         ((Player) player).damage(damage, bot.getEntity());
-                    }else if(player.getType().equals(EntityType.PLAYER) && player.getLocation().distance(bot.getEntity().getLocation()) <= 3.5){
+                    }else if(bot.getEntity() != null &&player.getType().equals(EntityType.PLAYER) && player.getLocation().distance(bot.getEntity().getLocation()) <= 3.5){
                         ((Player) player).damage(damage, bot.getEntity());
                     }
 
@@ -266,9 +267,12 @@ public class BotPlayer {
 
                 if(getAction().equals(BotAction.ATTACKING)) return;
 
-                if(bot.getEntity().isOnGround() &&
-                        !bot.getNavigator().isNavigating()) {
-                    bot.getNavigator().setTarget(hunterUtils.getClosetNearby((Player) bot.getEntity()).getLocation());
+                if(bot.getEntity() != null && bot.getEntity().isOnGround()) {
+                    Player target = hunterUtils.getClosetNearby((Player) bot.getEntity());
+                    if(target!=null){
+                        bot.getNavigator().cancelNavigation();
+                        bot.getNavigator().setTarget(target, false);
+                    }
                     setAction(BotAction.ATTACKING);
                 }
             }
@@ -286,15 +290,19 @@ public class BotPlayer {
                 if(getAction().equals(BotAction.PATHFINDING)) return;
                 if(getAction().equals(BotAction.ATTACKING)) return;
                 if(getAction().equals(BotAction.FROZEN)){
-                    Location location = bot.getEntity().getLocation();
+
+                    Location location;
+                    if(bot.getEntity() != null) location = bot.getEntity().getLocation();
 
                     if(bot.getNavigator().isNavigating()) return;
-                    if(!bot.getEntity().isOnGround()) return;
+                    if(bot.getEntity() != null && !bot.getEntity().isOnGround()) return;
 
-                    if(bot.getEntity().isOnGround()) {
-                        bot.getNavigator().cancelNavigation();
+                    if(bot.getEntity() != null &&bot.getEntity().isOnGround()) {
                         Player target = hunterUtils.getClosetNearby((Player) bot.getEntity());
-                        bot.getNavigator().setTarget(target, false);
+                        if(target!=null){
+                            bot.getNavigator().cancelNavigation();
+                            bot.getNavigator().setTarget(target, false);
+                        }
                         setAction(BotAction.ATTACKING);
                     }
                 }
